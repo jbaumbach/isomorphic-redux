@@ -12,6 +12,7 @@ import { createStore,
          combineReducers,
          applyMiddleware }       from 'redux';
 import path                      from 'path';
+var apiRoutes = require(process.cwd() + '/server/routes');
 
 const app = express();
 
@@ -21,7 +22,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 app.use(express.static(path.join(__dirname, 'dist')));
 
-app.use( (req, res) => {
+app.use( (req, res, next) => {
   const location = createLocation(req.url);
   const reducer  = combineReducers(reducers);
   const store    = applyMiddleware(promiseMiddleware)(createStore)(reducer);
@@ -32,8 +33,11 @@ app.use( (req, res) => {
       return res.status(500).end('Internal server error');
     }
 
-    if(!renderProps)
-      return res.status(404).end('Not found');
+    if(!renderProps) {
+      next();
+      return;
+    }
+      //return res.status(404).end('Not found');
 
     function renderView() {
       const InitialView = (
@@ -74,4 +78,5 @@ app.use( (req, res) => {
   });
 });
 
+apiRoutes(app);
 export default app;
