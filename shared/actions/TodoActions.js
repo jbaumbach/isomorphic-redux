@@ -1,11 +1,18 @@
 import request from 'axios';
+import util from 'util';
 
 const API_URL = 'https://webtask.it.auth0.com/api/run/wt-milomord-gmail_com-0/redux-tutorial-backend?webtask_no_cache=1';
+const LOCAL_API_URL = 'http://localhost:3000/api/v1/todos';
 
 export function getTodos() {
   return {
     type:    'GET_TODOS',
-    promise: request.get(API_URL)
+    //promise: new Promise((resolve, reject) => {
+    //  console.log(`gotta request some junk`);
+    //
+    //  request.get(API_URL).then((response) => { console.log(`got: ${util.inspect(response)}`); resolve(response);});
+    //})
+    promise: request.get(LOCAL_API_URL)
   }
 }
 
